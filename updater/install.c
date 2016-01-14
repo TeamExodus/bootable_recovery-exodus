@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 The Android Open Source Project
+ * Copyright (C) 2016 Team Exodus
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -236,7 +236,7 @@ Value* UnmountFn(const char* name, State* state, int argc, Expr* argv[]) {
     scan_mounted_volumes();
     const MountedVolume* vol = find_mounted_volume_by_mount_point(mount_point);
     if (vol == NULL) {
-        uiPrintf(state, "unmount of %s failed; no such volume\n", mount_point);
+        uiPrintf(state, "Made sure %s is unmounted\n", mount_point);
         result = strdup("");
     } else {
         int ret = unmount_mounted_volume(vol);
