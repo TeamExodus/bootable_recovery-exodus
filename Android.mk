@@ -428,11 +428,11 @@ endif
 ifneq ($(TW_EXCLUDE_DEFAULT_USB_INIT), true)
     LOCAL_ADDITIONAL_DEPENDENCIES += init.recovery.usb.rc
 endif
-ifeq ($(TARGET_USES_LOGD), true)
-    LOCAL_ADDITIONAL_DEPENDENCIES += logd libsysutils libnl init.recovery.logd.rc
-endif
 ifeq ($(TWRP_INCLUDE_LOGCAT), true)
     LOCAL_ADDITIONAL_DEPENDENCIES += logcat
+    ifeq ($(TARGET_USES_LOGD), true)
+        LOCAL_ADDITIONAL_DEPENDENCIES += logd libsysutils libnl init.recovery.logd.rc
+    endif
 endif
 # Allow devices to specify device-specific recovery dependencies
 ifneq ($(TARGET_RECOVERY_DEVICE_MODULES),)
@@ -468,6 +468,16 @@ include $(CLEAR_VARS)
 # Create busybox symlinks... gzip and gunzip are excluded because those need to link to pigz instead
 BUSYBOX_LINKS := $(shell cat external/busybox/busybox-full.links)
 exclude := tune2fs mke2fs mkdosfs mkfs.vfat gzip gunzip
+
+# Having /sbin/modprobe present on 32 bit devices with can cause a massive
+# performance problem if the kernel has CONFIG_MODULES=y
+ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 22; echo $$?),0)
+    ifneq ($(TARGET_ARCH), arm64)
+        ifneq ($(TARGET_ARCH), x86_64)
+            exclude += modprobe
+        endif
+    endif
+endif
 
 # If busybox does not have restorecon, assume it does not have SELinux support.
 # Then, let toolbox provide 'ls' so -Z is available to list SELinux contexts.
