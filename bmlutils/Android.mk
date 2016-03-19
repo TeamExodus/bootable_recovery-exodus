@@ -13,6 +13,7 @@ $(foreach board_define,$(BOARD_RECOVERY_DEFINES), \
 
 LOCAL_SRC_FILES := bmlutils.c
 LOCAL_MODULE := libbmlutils
+LOCAL_CFLAGS += -ffunction-sections -fdata-sections
 LOCAL_MODULE_TAGS := eng
 include $(BUILD_STATIC_LIBRARY)
 
@@ -30,5 +31,6 @@ $(foreach board_define,$(BOARD_RECOVERY_DEFINES), \
 
 LOCAL_SRC_FILES := bmlutils.c
 LOCAL_MODULE := libbmlutils
+LOCAL_CFLAGS += -ffunction-sections -fdata-sections
 LOCAL_MODULE_TAGS := eng
 include $(BUILD_SHARED_LIBRARY)
